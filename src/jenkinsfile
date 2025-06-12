@@ -3,4 +3,24 @@ pipeline{
   stages{
     stage ('checkout scm') {
       git clone: '"branch:'main'"https://github.com/ammukaleem/Ekart-project'
+}
+stage ('Buid') {
+   sh 'mvn clean package' 
+}
+stage ('Docker Build') {
+   sh 'docker build -t ekart:${BUILD_NUMBER} .'
+}
+stage ('Docker Push') {
+   withCredentials([string(credentialsId: 'dockerhub-credentials', variable: 'DOCKERHUB_PASSWORD')]) {
+       sh 'echo $DOCKERHUB_PASSWORD | docker login -u dockaleem --password-stdin'
+       sh 'docker push ekart:${BUILD_NUMBER}'
+   }
+}
+stage ('pull and deploy to k8s cluster') {
+   sh 'kubectl apply -f k8s/deployment.yaml'
+   sh 'kubectl set image deployment/ekart ekart=ekart:${BUILD_NUMBER}'
+   sh 'kubectl rollout status deployment/ekart'
+}
+
+
     
