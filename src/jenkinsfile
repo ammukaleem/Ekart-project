@@ -1,0 +1,6 @@
+pipeline{
+  agents any
+  stages{
+    stage ('checkout scm') {
+      git clone: '"branch:'main'"https://github.com/ammukaleem/Ekart-project'
+    
