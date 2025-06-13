@@ -2,11 +2,21 @@ pipeline{
   agents any
   stages{
     stage ('checkout scm') {
-      git clone: '"branch:'main'"https://github.com/ammukaleem/Ekart-project'
+      git branch:'main', url: 'https://github.com/ammukaleem/Ekart-project'
 }
 stage ('Buid') {
    sh 'mvn clean package' 
 }
+stage('Static Code Analysis') {
+      environment {
+        SONAR_URL = "http://192.168.56.11:9000"
+      }
+      steps {
+        withCredentials([string(credentialsId: 'sonarqube', variable: 'SONAR_AUTH_TOKEN')]) {
+          sh 'mvn sonar:sonar -Dsonar.login=$SONAR_AUTH_TOKEN -Dsonar.host.url=${SONAR_URL}'
+        }
+      }
+    }
 stage ('Docker Build') {
    sh 'docker build -t ekart:${BUILD_NUMBER} .'
 }
@@ -17,6 +27,7 @@ stage ('Docker Push') {
    }
 }
 stage ('pull and deploy to k8s cluster') {
+   
    sh 'kubectl apply -f k8s/deployment.yaml'
    sh 'kubectl set image deployment/ekart ekart=ekart:${BUILD_NUMBER}'
    sh 'kubectl rollout status deployment/ekart'
