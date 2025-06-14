@@ -24,7 +24,7 @@ pipeline {
     }
     stage('Docker Build') {
       steps {
-        sh 'docker build -t ekart:${BUILD_NUMBER} .'
+        sh 'docker build -t dockaleem/ekart:${BUILD_NUMBER} .'
       }
     }
             
