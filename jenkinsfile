@@ -32,7 +32,7 @@ pipeline {
       steps {
         withCredentials([string(credentialsId: 'dockerhub-credentials', variable: 'DOCKERHUB_PASSWORD')]) {
           sh 'echo $DOCKERHUB_PASSWORD | docker login -u dockaleem --password-stdin'
-          sh 'docker tag dockaleem/ekart:${BUILD_NUMBER} $DOCKER_USERNAME/ekart:23${BUILD_NUMBER}'
+          sh 'docker tag dockaleem/ekart:${BUILD_NUMBER} $DOCKER_USERNAME/ekart:${BUILD_NUMBER}'
           sh 'docker push dockaleem/ekart:${BUILD_NUMBER}'
         }
       }
