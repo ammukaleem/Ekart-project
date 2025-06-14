@@ -24,9 +24,10 @@ pipeline {
     }
     stage('Docker Build') {
       steps {
-        sh 'docker build -t ekart:${BUILD_NUMBER} .'
+        sh 'docker build -t ekart:${BUILD_NUMBER} /src/'
       }
     }
+            
     stage('Docker Push') {
       steps {
         withCredentials([string(credentialsId: 'dockerhub-credentials', variable: 'DOCKERHUB_PASSWORD')]) {
