@@ -39,7 +39,8 @@ pipeline {
     }
     stage('pull and deploy to k8s cluster') {
       steps {
-        sh 'kubectl apply -f k8s/deployment.yaml --validation=false'
+        sh 'kubectl apply -f k8s/deployment.yaml --validate=false'
+        sh 'kubectl apply -f k8s/service.yaml --validate=false'
         sh 'kubectl set image deployment/ekart ekart=ekart:${BUILD_NUMBER}'
         sh 'kubectl rollout status deployment/ekart'
       }
