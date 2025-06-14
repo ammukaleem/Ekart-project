@@ -32,6 +32,7 @@ stage ('pull and deploy to k8s cluster') {
    sh 'kubectl set image deployment/ekart ekart=ekart:${BUILD_NUMBER}'
    sh 'kubectl rollout status deployment/ekart'
 }
-
+  }
+}
 
     
